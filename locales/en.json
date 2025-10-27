@@ -1,0 +1,53 @@
+{
+  "navbar": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "project": "Project",
+    "advantages": "Advantages",
+    "contact": "Contact Us"
+  },
+  "hero": {
+    "title": "Mapplecave",
+    "subtitle": "Galda spēļu klubs Liepājā",
+    "description": "Atklājiet galda spēļu pasauli mūsu mājīgajā klubā. Vairāk nekā 500 spēles, draudzīga kopiena un neaizmirstami vakarā.",
+    "bookTable": "Rezervēt galdu",
+    "learnMore": "Uzzināt vairāk"
+  },
+  "faq": {
+    "title": "FAQ",
+    "column1": [
+      {
+        "question": "What board games are most commonly offered at the club, and is it possible to bring your own games?",
+        "answer": "The club offers a wide selection of board games, including popular strategy games, family games, and new releases. Some of the games available are 'Carcassonne,' 'Settlers of Catan,' 'Ticket to Ride,' and others. Yes, you can bring your own games, provided they don't cause issues for other participants (such as being too loud or complex)."
+      },
+      {
+        "question": "What is the cost of visiting the club, and are there discounts for students or regular customers?",
+        "answer": "Entry to the club is free, but donations are welcomed to support the club's operations and improve the gaming environment."
+      },
+      {
+        "question": "How does the club ensure comfortable conditions for gaming (lighting, comfortable tables and chairs)?",
+        "answer": "The club provides good lighting for gaming, comfortable tables and chairs, as well as separate zones for games with children or quieter activities. The rooms are usually kept at a comfortable temperature, creating a cozy atmosphere."
+      }
+    ],
+    "column2": [
+      {
+        "question": "Does the club offer additional services, such as food and drinks, or the possibility to order delivery?",
+        "answer": "The club typically offers a small selection of drinks and snacks that can be purchased on-site. Some clubs also allow food delivery. This creates a comfortable environment for long gaming sessions when players can snack or rest without leaving the club."
+      },
+      {
+        "question": "What days is the club open?",
+        "answer": "The club is open on certain days of the week, but the exact schedule and up-to-date information about events are posted on our Facebook page. Follow it to stay informed about the next game night and other club events."
+      }
+    ]
+  },
+  "filters": {
+    "title": "Filters",
+    "search": "Search",
+    "categories": "Categories",
+    "players": "Players",
+    "clear": "Clear",
+    "notitle": "No title",
+    "playersCount": "{{count}} players"
+  }
+}

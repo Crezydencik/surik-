@@ -1,0 +1,19 @@
+{
+	"navbar": {
+		"home": "Home",
+		"about": "About Us",
+		"services": "Services",
+		"project": "Project",
+		"advantages": "Advantages",
+		"contact": "Contact Us"
+	},
+	"filters": {
+		"title": "Фильтры",
+		"search": "Поиск",
+		"categories": "Категории",
+		"players": "Игроки",
+		"clear": "Сбросить",
+		"notitle": "Без названия",
+		"playersCount": "{{count}} игрок(ов)"
+	}
+}

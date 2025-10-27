@@ -1,0 +1,19 @@
+{
+	"navbar": {
+		"home": "Home",
+		"about": "About Us",
+		"services": "Services",
+		"project": "Project",
+		"advantages": "Advantages",
+		"contact": "Contact Us"
+	},
+	"filters": {
+		"title": "Filtri",
+		"search": "Meklēt",
+		"categories": "Kategorijas",
+		"players": "Spēlētāji",
+		"clear": "Notīrīt",
+		"notitle": "Bez nosaukuma",
+		"playersCount": "{{count}} spēlētāji"
+	}
+}

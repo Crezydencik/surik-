@@ -1,0 +1,28 @@
+                      .footer {
+  @apply bg-gray-800 text-white py-6;
+}
+
+
+.logo {
+  @apply text-xl font-bold;
+}
+
+.links {
+  @apply flex space-x-6;
+}
+
+.link {
+  @apply hover:underline;
+}
+
+.social {
+  @apply flex space-x-6;
+}
+
+.socialLink {
+  @apply hover:underline;
+}
+
+.copy {
+  @apply text-center mt-6;
+}
