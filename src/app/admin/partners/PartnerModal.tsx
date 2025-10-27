@@ -6,8 +6,6 @@ import { X, ImagePlus, Trash } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 
-type Language = "ru" | "en" | "lv";
-
 interface Partner {
   id: string;
   name: string; // ⚡ теперь просто строка
@@ -28,19 +26,15 @@ export default function PartnerModal({
 }) {
   const supabase = createClientComponentClient();
 
-  const [activeLang, setActiveLang] = useState<Language>("ru");
-
   const [name, setName] = useState<string>(partner?.name || "");
-  const [description, setDescription] = useState<Record<string, string>>(
-    partner?.description_key || { ru: "", en: "", lv: "" }
+  const [description] = useState<Record<string, string>>(
+    partner?.description_key || { ru: "", en: "", lv: "" },
   );
   const [logoUrl, setLogoUrl] = useState<string>(partner?.logo_url || "");
   const [websiteUrl, setWebsiteUrl] = useState<string>(
-    partner?.website_url || ""
+    partner?.website_url || "",
   );
-  const [isActive, setIsActive] = useState<boolean>(
-    partner?.is_active ?? true
-  );
+  const [isActive, setIsActive] = useState<boolean>(partner?.is_active ?? true);
 
   const [saving, setSaving] = useState(false);
 
@@ -154,17 +148,16 @@ export default function PartnerModal({
             }))
           }
           className="w-full mb-3 px-3 py-2 bg-gray-800 rounded border border-gray-700"
-        /> */} 
+        /> */}
 
-			
-					{/* Website */}
-					<input
-					  type="url"
-					  placeholder="Website URL"
-					  value={websiteUrl}
-					  onChange={(e) => setWebsiteUrl(e.target.value)}
-					  className="w-full mb-3 px-3 py-2 bg-gray-800 rounded border border-gray-700"
-					/>
+        {/* Website */}
+        <input
+          type="url"
+          placeholder="Website URL"
+          value={websiteUrl}
+          onChange={(e) => setWebsiteUrl(e.target.value)}
+          className="w-full mb-3 px-3 py-2 bg-gray-800 rounded border border-gray-700"
+        />
 
         {/* Логотип */}
         <div className="mb-3">
@@ -180,9 +173,9 @@ export default function PartnerModal({
                 onClick={() => setLogoUrl("")}
                 className="absolute top-1 right-1 bg-black/70 p-1 rounded-full"
               >
-                <Trash size={14} />  
-              </button>  
-            </div>			  
+                <Trash size={14} />
+              </button>
+            </div>
           ) : (
             <label className="cursor-pointer flex items-center gap-2 text-gray-400 hover:text-white">
               <ImagePlus size={20} /> Загрузить логотип
