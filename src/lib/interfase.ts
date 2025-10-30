@@ -18,17 +18,26 @@ export interface Game {
     name: MultiLangField;
   };
 }
+export interface GameItemProps {
+  title: string;
+  description?: string;
+  img: string;
+  players?: string;
+  time: string;
+  rating?: number;
+  difficulty?: string;
+  available?: boolean;
+  status?: "available" | "busy" | "queue"; // 🟢 🟠 ⚪
+  category?: string; // 👈 новое поле
+}
 
 export interface Category {
   id: number; // ← тоже number
   name: MultiLangField;
 }
-export interface GameWithCategory extends Game {
-  category?: {
-    id: number;
-    name: MultiLangField;
-  };
-}
+export type GameWithCategory = Game & {
+  category: Category; // единичный объект
+};
 
 export interface GameCardProps {
   game: GameWithCategory;

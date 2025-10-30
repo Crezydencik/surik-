@@ -7,6 +7,14 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import { Toaster } from "sonner";
 
+// ✅ импортируем типы из supabase-js
+import type { Session, AuthError } from "@supabase/supabase-js";
+
+type SessionResponse = {
+  data: { session: Session | null };
+  error: AuthError | null;
+};
+
 export default function AdminLayout({
   children,
 }: {
@@ -24,32 +32,30 @@ export default function AdminLayout({
 
     const checkAuth = async () => {
       try {
-        // Быстрая проверка - устанавливаем таймаут
-        const timeoutPromise = new Promise((_, reject) =>
+        // быстрый таймаут
+        const timeoutPromise = new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error("Timeout")), 2000),
         );
 
-        const sessionPromise = supabase.auth.getSession();
+        const sessionPromise: Promise<SessionResponse> =
+          supabase.auth.getSession();
 
-        const result = (await Promise.race([
-          sessionPromise,
-          timeoutPromise,
-        ])) as any;
+        // ✅ теперь race строго типизирован
+        const result = await Promise.race([sessionPromise, timeoutPromise]);
 
         if (!mounted) return;
 
-        if (!result?.data?.session && !isLoginPage) {
+        if ("data" in result && !result.data.session && !isLoginPage) {
           router.replace("/admin/login");
           return;
         }
 
-        if (result?.data?.session && isLoginPage) {
+        if ("data" in result && result.data.session && isLoginPage) {
           router.replace("/admin");
           return;
         }
       } catch (error) {
         console.log("Auth check:", error);
-        // В случае ошибки или таймаута - пропускаем проверку
         if (!isLoginPage && mounted) {
           router.replace("/admin/login");
         }
@@ -65,7 +71,7 @@ export default function AdminLayout({
     return () => {
       mounted = false;
     };
-  }, [pathname, isLoginPage]);
+  }, [pathname, isLoginPage, supabase, router]);
 
   // Показываем скелетон вместо полной загрузки
   if (loading && !isLoginPage) {

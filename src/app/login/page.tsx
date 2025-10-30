@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
@@ -12,7 +11,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+
   const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {

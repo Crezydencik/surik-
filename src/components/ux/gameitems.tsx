@@ -3,19 +3,7 @@
 import Image from "next/image";
 import { Users, Clock3, Trophy } from "lucide-react";
 import styles from "./styles/game.module.scss";
-
-interface GameItemProps {
-  title: string;
-  description: string;
-  img: string;
-  players: string;
-  time: string;
-  rating: number;
-  difficulty?: string;
-  available?: boolean;
-  status?: "available" | "busy" | "queue"; // 🟢 🟠 ⚪
-  category?: string; // 👈 новое поле
-}
+import { GameItemProps } from "../../lib/interfase";
 
 const GameItem = ({
   title,
