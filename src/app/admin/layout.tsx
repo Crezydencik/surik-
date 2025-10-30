@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 
 // типы из supabase-js
 import type { AuthError, Session } from "@supabase/supabase-js";
-import { createClientBrowser } from "../../lib/supabase/server";
+import { createClientBrowser } from "../../lib/supabase/client";
 
 type RaceResult = { kind: "ok"; session: Session | null } | { kind: "timeout" };
 

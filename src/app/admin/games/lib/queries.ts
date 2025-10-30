@@ -1,4 +1,4 @@
-import { Game } from "../../../../lib/interfase";
+import { Game } from "../../../../lib/interfase"; 
 import { createClient } from "../../../../lib/supabase";
 
 // Базовые типы для jsonb-полей
