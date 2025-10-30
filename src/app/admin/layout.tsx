@@ -7,13 +7,10 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import { Toaster } from "sonner";
 
-// ✅ импортируем типы из supabase-js
-import type { Session, AuthError } from "@supabase/supabase-js";
+// типы из supabase-js
+import type { AuthError, Session } from "@supabase/supabase-js";
 
-type SessionResponse = {
-  data: { session: Session | null };
-  error: AuthError | null;
-};
+type RaceResult = { kind: "ok"; session: Session | null } | { kind: "timeout" };
 
 export default function AdminLayout({
   children,
@@ -25,44 +22,56 @@ export default function AdminLayout({
   const [supabase] = useState(() => createClient());
   const [loading, setLoading] = useState(true);
 
-  const isLoginPage = pathname === "/admin/login";
-
   useEffect(() => {
     let mounted = true;
 
     const checkAuth = async () => {
+      // считаем isLoginPage внутри эффекта — не нужен в deps
+      const isLoginPage = pathname === "/admin/login";
+
       try {
-        // быстрый таймаут
-        const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout")), 2000),
+        const timeoutPromise = new Promise<RaceResult>((resolve) =>
+          setTimeout(() => resolve({ kind: "timeout" }), 2000),
         );
 
-        const sessionPromise: Promise<SessionResponse> =
-          supabase.auth.getSession();
-
-        // ✅ теперь race строго типизирован
+        const sessionPromise = supabase.auth
+          .getSession()
+          .then(
+            (res: {
+              data: { session: Session | null };
+              error: AuthError | null;
+            }) => {
+              return { kind: "ok", session: res.data.session } as RaceResult;
+            },
+          );
         const result = await Promise.race([sessionPromise, timeoutPromise]);
 
         if (!mounted) return;
 
-        if ("data" in result && !result.data.session && !isLoginPage) {
-          router.replace("/admin/login");
+        if (result.kind === "timeout") {
+          // при таймауте считаем, что не залогинен
+          if (!isLoginPage) router.replace("/admin/login");
           return;
         }
 
-        if ("data" in result && result.data.session && isLoginPage) {
+        // result.kind === "ok"
+        const hasSession = !!result.session;
+
+        if (!hasSession && !isLoginPage) {
+          router.replace("/admin/login");
+          return;
+        }
+        if (hasSession && isLoginPage) {
           router.replace("/admin");
           return;
         }
-      } catch (error) {
-        console.log("Auth check:", error);
-        if (!isLoginPage && mounted) {
+      } catch (err: unknown) {
+        console.log("Auth check error:", err);
+        if (mounted && pathname !== "/admin/login") {
           router.replace("/admin/login");
         }
       } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        if (mounted) setLoading(false);
       }
     };
 
@@ -71,31 +80,31 @@ export default function AdminLayout({
     return () => {
       mounted = false;
     };
-  }, [pathname, isLoginPage, supabase, router]);
+    // deps: всё, что реально используется внутри
+  }, [pathname, router, supabase]);
 
-  // Показываем скелетон вместо полной загрузки
-  if (loading && !isLoginPage) {
+  // Скелетон во время проверки авторизации (кроме страницы логина)
+  if (loading && pathname !== "/admin/login") {
     return (
       <div className="flex h-screen bg-black text-white">
-        {/* Скелетон сайдбара */}
         <div className="w-64 bg-[#0A0A0A] p-4">
-          <div className="h-8 bg-gray-800 rounded mb-4 animate-pulse"></div>
-          <div className="h-6 bg-gray-800 rounded mb-2 animate-pulse"></div>
-          <div className="h-6 bg-gray-800 rounded mb-2 animate-pulse"></div>
+          <div className="h-8 bg-gray-800 rounded mb-4 animate-pulse" />
+          <div className="h-6 bg-gray-800 rounded mb-2 animate-pulse" />
+          <div className="h-6 bg-gray-800 rounded mb-2 animate-pulse" />
         </div>
-
-        {/* Скелетон контента */}
         <div className="flex-1 flex flex-col">
-          <div className="h-16 bg-[#0A0A0A] border-b border-gray-800 animate-pulse"></div>
+          <div className="h-16 bg-[#0A0A0A] border-b border-gray-800 animate-pulse" />
           <div className="flex-1 p-6">
-            <div className="h-8 bg-gray-800 rounded w-1/3 mb-4 animate-pulse"></div>
-            <div className="h-4 bg-gray-800 rounded w-full mb-2 animate-pulse"></div>
-            <div className="h-4 bg-gray-800 rounded w-2/3 animate-pulse"></div>
+            <div className="h-8 bg-gray-800 rounded w-1/3 mb-4 animate-pulse" />
+            <div className="h-4 bg-gray-800 rounded w-full mb-2 animate-pulse" />
+            <div className="h-4 bg-gray-800 rounded w-2/3 animate-pulse" />
           </div>
         </div>
       </div>
     );
   }
+
+  const isLoginPage = pathname === "/admin/login";
 
   return (
     <>
