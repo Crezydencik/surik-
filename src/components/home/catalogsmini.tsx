@@ -229,7 +229,7 @@ const Catalogsmini = () => {
                     img={game.image_url}
                     players={`${game.min_players}-${game.max_players}`}
                     time={`${game.duration_minutes} мин`}
-                    rating={game.rating}
+                    rating={game.rating ?? undefined}
                     difficulty={game.difficulty}
                     available={game.is_available}
                     category={

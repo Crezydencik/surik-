@@ -17,10 +17,7 @@ export default function GameCard({ game, onDelete, onEdit }: GameCardProps) {
   const categoryName =
     ("category" in game &&
       game.category &&
-      (game.category.name?.[lang] ??
-        game.category.name?.en ??
-        game.category.name?.lv ??
-        game.category.name?.ru)) ||
+      (game.category.name?.[lang] ?? game.category.name?.en ?? "")) ||
     "—";
 
   const ratingText =
