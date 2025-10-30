@@ -6,6 +6,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 
+export const dynamic = "force-dynamic"; // не пререндерить
+// export const revalidate = 0;             // (опц.) выключить кэш ssg
+
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

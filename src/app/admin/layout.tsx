@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import { Toaster } from "sonner";
 
 // типы из supabase-js
 import type { AuthError, Session } from "@supabase/supabase-js";
+import { createClientBrowser } from "../../lib/supabase/server";
 
 type RaceResult = { kind: "ok"; session: Session | null } | { kind: "timeout" };
 
@@ -19,7 +19,8 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [supabase] = useState(() => createClient());
+
+  const supabase = useMemo(() => createClientBrowser(), []);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
