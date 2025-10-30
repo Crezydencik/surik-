@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import PartnerCard from "./PartnerCard";
 import PartnerModal from "./PartnerModal";
@@ -21,18 +21,17 @@ export default function PartnersPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
 
-  const fetchPartners = async () => {
+  const fetchPartners = useCallback(async () => {
     const { data, error } = await supabase
       .from("partners")
       .select("*")
-      .order("display_order", { ascending: true });
-
-    if (!error && data) setPartners(data as Partner[]);
-  };
+      .order("name");
+    if (!error) setPartners(data ?? []);
+  }, [supabase]);
 
   useEffect(() => {
     fetchPartners();
-  }, []);
+  }, [fetchPartners]);
 
   return (
     <div className="p-8 text-white">

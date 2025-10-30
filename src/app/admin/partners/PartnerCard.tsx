@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink, Pencil, Trash2 } from "lucide-react";
+import Image from "next/image";
 
 interface Partner {
   id: string;
@@ -22,7 +23,7 @@ export default function PartnerCard({
   return (
     <div className="bg-gradient-to-br from-[#1e1e2e] to-[#2a2d3a] border border-[#2f3244] rounded-2xl p-6 flex flex-col items-center text-center shadow-md hover:shadow-purple-500/20 transition">
       {partner.logo_url && (
-        <img
+        <Image
           src={partner.logo_url}
           alt={partner.name}
           className="h-16 object-contain mb-3"

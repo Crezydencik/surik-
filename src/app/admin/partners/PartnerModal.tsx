@@ -6,10 +6,12 @@ import { X, ImagePlus, Trash } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 
+type Lang = "ru" | "en" | "lv";
+
 interface Partner {
   id: string;
-  name: string; // ⚡ теперь просто строка
-  description_key: Record<string, string>;
+  name: string;
+  description_key: Record<Lang, string>;
   logo_url: string;
   website_url: string;
   is_active: boolean;
@@ -26,13 +28,13 @@ export default function PartnerModal({
 }) {
   const supabase = createClientComponentClient();
 
-  const [name, setName] = useState<string>(partner?.name || "");
-  const [description] = useState<Record<string, string>>(
-    partner?.description_key || { ru: "", en: "", lv: "" },
+  const [name, setName] = useState<string>(partner?.name ?? "");
+  const [description] = useState<Record<Lang, string>>(
+    partner?.description_key ?? { ru: "", en: "", lv: "" },
   );
-  const [logoUrl, setLogoUrl] = useState<string>(partner?.logo_url || "");
+  const [logoUrl, setLogoUrl] = useState<string>(partner?.logo_url ?? "");
   const [websiteUrl, setWebsiteUrl] = useState<string>(
-    partner?.website_url || "",
+    partner?.website_url ?? "",
   );
   const [isActive, setIsActive] = useState<boolean>(partner?.is_active ?? true);
 
@@ -40,28 +42,29 @@ export default function PartnerModal({
 
   // === Загрузка файла ===
   const handleFileUpload = async (file: File) => {
-    const ext = file.name.split(".").pop();
+    const ext = file.name.split(".").pop() || "png";
     const fileName = `partner-${Date.now()}.${ext}`;
 
-    const { error } = await supabase.storage
+    const { error: uploadErr } = await supabase.storage
       .from("partners-logos")
       .upload(fileName, file, { upsert: true });
 
-    if (error) {
-      toast.error("Ошибка загрузки: " + error.message);
-    } else {
-      const { data } = supabase.storage
-        .from("partners-logos")
-        .getPublicUrl(fileName);
-
-      setLogoUrl(data.publicUrl);
-      toast.success("Логотип загружен ✅");
+    if (uploadErr) {
+      toast.error("Ошибка загрузки: " + uploadErr.message);
+      return;
     }
+
+    const { publicUrl } = supabase.storage
+      .from("partners-logos")
+      .getPublicUrl(fileName).data;
+
+    setLogoUrl(publicUrl);
+    toast.success("Логотип загружен ✅");
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) handleFileUpload(file);
+    if (file) void handleFileUpload(file);
   };
 
   const handleSave = async () => {
@@ -75,25 +78,26 @@ export default function PartnerModal({
       is_active: isActive,
     };
 
-    let error;
+    let err = null;
 
     if (partner) {
-      ({ error } = await supabase
+      ({ error: err } = await supabase
         .from("partners")
         .update(payload)
         .eq("id", partner.id));
     } else {
-      ({ error } = await supabase.from("partners").insert([payload]));
+      ({ error: err } = await supabase.from("partners").insert([payload]));
     }
 
-    if (error) {
-      toast.error("Ошибка при сохранении: " + error.message);
-    } else {
-      toast.success(partner ? "Партнёр обновлён" : "Партнёр добавлен");
-      onSave();
-      onClose();
+    if (err) {
+      toast.error("Ошибка при сохранении: " + err.message);
+      setSaving(false);
+      return;
     }
 
+    toast.success(partner ? "Партнёр обновлён" : "Партнёр добавлен");
+    onSave();
+    onClose();
     setSaving(false);
   };
 
@@ -103,6 +107,7 @@ export default function PartnerModal({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white"
+          aria-label="Закрыть"
         >
           <X size={22} />
         </button>
@@ -111,7 +116,7 @@ export default function PartnerModal({
           {partner ? "Редактировать партнёра" : "Добавить партнёра"}
         </h2>
 
-        {/* Название (одно поле, без языков) */}
+        {/* Название */}
         <input
           type="text"
           placeholder="Название"
@@ -119,36 +124,6 @@ export default function PartnerModal({
           onChange={(e) => setName(e.target.value)}
           className="w-full mb-3 px-3 py-2 bg-gray-800 rounded border border-gray-700"
         />
-
-        {/* Переключатель языков для описания
-        <div className="flex gap-2 mb-4">
-          {(["ru", "en", "lv"] as Language[]).map((lng) => (
-            <button
-              key={lng}
-              onClick={() => setActiveLang(lng)}
-              className={`px-3 py-1 rounded-full text-sm ${
-                activeLang === lng
-                  ? "bg-purple-600 text-white"
-                  : "bg-gray-700 text-gray-300"
-              }`}
-            >
-              {lng.toUpperCase()}
-            </button>
-          ))}
-        </div>
-
-        {/* Описание */}
-        {/* <textarea
-          placeholder={`Описание (${activeLang})`}
-          value={description[activeLang] || ""}
-          onChange={(e) =>
-            setDescription((prev) => ({
-              ...prev,
-              [activeLang]: e.target.value,
-            }))
-          }
-          className="w-full mb-3 px-3 py-2 bg-gray-800 rounded border border-gray-700"
-        /> */}
 
         {/* Website */}
         <input
@@ -172,6 +147,7 @@ export default function PartnerModal({
               <button
                 onClick={() => setLogoUrl("")}
                 className="absolute top-1 right-1 bg-black/70 p-1 rounded-full"
+                aria-label="Удалить логотип"
               >
                 <Trash size={14} />
               </button>
@@ -188,6 +164,7 @@ export default function PartnerModal({
             </label>
           )}
         </div>
+
         {/* Активен */}
         <label className="flex items-center gap-2 mb-4">
           <input
