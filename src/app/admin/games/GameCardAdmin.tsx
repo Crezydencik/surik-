@@ -1,32 +1,37 @@
 import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { GameCardProps } from "../../../lib/interfase";
+import type { GameCardProps } from "../../../lib/interfase";
 
 export default function GameCard({ game, onDelete, onEdit }: GameCardProps) {
   const { i18n } = useTranslation();
-  const lang = (i18n.language as "en" | "lv" | "ru") || "en";
+  const lang = (i18n.language?.slice(0, 2) as "en" | "lv" | "ru") || "en";
 
-  const title =
-    game.title_key?.[lang] ||
-    Object.values(game.title_key || {})[0] ||
-    "Без названия";
+  const pickLang = (ml?: Record<string, string>) =>
+    ml?.[lang] ?? ml?.en ?? ml?.lv ?? ml?.ru ?? "";
 
-  const description =
-    game.description_key?.[lang] ||
-    Object.values(game.description_key || {})[0] ||
-    "";
+  const title = pickLang(game.title_key) || "Без названия";
+  const description = pickLang(game.description_key);
 
+  // безопасно получаем имя категории (если она вообще есть)
   const categoryName =
-    game.category?.name?.[lang] ||
-    Object.values(game.category?.name || {})[0] ||
+    ("category" in game &&
+      game.category &&
+      (game.category.name?.[lang] ??
+        game.category.name?.en ??
+        game.category.name?.lv ??
+        game.category.name?.ru)) ||
     "—";
+
   const ratingText =
     typeof game.rating === "number" && Number.isFinite(game.rating)
       ? game.rating.toFixed(1)
       : "—";
 
-  <div className="flex items-center gap-1">🏷 {categoryName}</div>;
+  const durationText =
+    typeof game.duration_minutes === "number" && game.duration_minutes > 0
+      ? `${game.duration_minutes} мин`
+      : "—";
 
   return (
     <div className="bg-[#111118] border border-[#22222c] rounded-xl overflow-hidden shadow-md">
@@ -34,9 +39,10 @@ export default function GameCard({ game, onDelete, onEdit }: GameCardProps) {
       <div className="relative h-[200px] w-full">
         <Image
           src={game.image_url || "/placeholder.jpg"}
-          alt="Game Cover"
+          alt={title || "Game Cover"}
           fill
           className="object-cover"
+          sizes="(max-width: 768px) 100vw, 33vw"
         />
         {game.difficulty && (
           <div className="absolute top-2 right-2 bg-yellow-200 text-yellow-900 text-xs px-2 py-1 rounded">
@@ -54,17 +60,17 @@ export default function GameCard({ game, onDelete, onEdit }: GameCardProps) {
           <div className="flex items-center gap-1">
             👥 {game.min_players}–{game.max_players}
           </div>
-          <div className="flex items-center gap-1">
-            ⏱ {game.duration_minutes} мин
-          </div>
+          <div className="flex items-center gap-1">⏱ {durationText}</div>
           <div className="flex items-center gap-1">🏆 {ratingText}</div>
           <div className="flex items-center gap-1">🏷 {categoryName}</div>
         </div>
 
         {/* Описание */}
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-          {description}
-        </p>
+        {description && (
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+            {description}
+          </p>
+        )}
 
         {/* Нижняя панель */}
         <div className="flex items-center justify-between">
@@ -82,12 +88,14 @@ export default function GameCard({ game, onDelete, onEdit }: GameCardProps) {
             <button
               className="text-blue-500 hover:text-blue-700"
               onClick={() => onEdit?.(game.id)}
+              aria-label="Редактировать"
             >
               <Pencil size={18} />
             </button>
             <button
               className="text-red-500 hover:text-red-700"
               onClick={() => onDelete?.(game.id)}
+              aria-label="Удалить"
             >
               <Trash2 size={18} />
             </button>

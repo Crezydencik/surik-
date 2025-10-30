@@ -35,12 +35,12 @@ export interface Category {
   id: number; // ← тоже number
   name: MultiLangField;
 }
-export type GameWithCategory = Game & {
-  category: Category; // единичный объект
-};
+export type GameWithCategory = Game & { category: Category | null };
 
-export interface GameCardProps {
-  game: GameWithCategory;
-  onDelete?: (id: string) => void;
+export type AdminGame = Game | GameWithCategory;
+
+export type GameCardProps = {
+  game: AdminGame;
+  onDelete?: (id: string) => void | Promise<void>;
   onEdit?: (id: string) => void;
-}
+};
