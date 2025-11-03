@@ -1,6 +1,6 @@
-'use client';
-import Link from 'next/link';
-import { Facebook, Instagram } from 'lucide-react';
+"use client";
+import Link from "next/link";
+import { Facebook, Instagram } from "lucide-react";
 
 export default function ThreeBlocksInRow() {
   return (
@@ -9,7 +9,11 @@ export default function ThreeBlocksInRow() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {/* Первый блок */}
           <div className="flex justify-center items-center sm:border-r-2 sm:border-dashed  max-[640px]:border-b-2 max-[640px]:border-dashed max-[640px]:pb-6 pr-6">
-            <img src="/logo.png" alt="Meeple Cave Logo" className="object-center" />
+            <img
+              src="/logo.png"
+              alt="Meeple Cave Logo"
+              className="object-center"
+            />
           </div>
 
           {/* Второй блок */}
@@ -25,7 +29,7 @@ export default function ThreeBlocksInRow() {
                   STORE
                 </span>
               </a>
-              <a href="#" className="text-white inline-block">
+              <a href="/catalogs" className="text-white inline-block">
                 <span className="border-b-2 border-transparent hover:border-cm-blue transition duration-300">
                   CATALOG
                 </span>
@@ -41,12 +45,21 @@ export default function ThreeBlocksInRow() {
           {/* Третий блок */}
           <div className="flex justify-center items-center">
             <div className="grid grid-cols-2 gap-6 text-center">
-              <span className="border-b-2 border-transparent">Latvia, Liepaja</span>
-              <a href="tel:+3712999999" className="text-white inline-block">
-                <span className="border-b-2 border-transparent">+3712999999</span>
+              <span className="border-b-2 border-transparent">
+                Latvia, Liepaja
+              </span>
+              <a href="tel:+37128954796" className="text-white inline-block">
+                <span className="border-b-2 border-transparent">
+                  +37128954796
+                </span>
               </a>
-              <a href="mailto:email@meeplecave.com" className="text-white inline-block">
-                <span className="border-b-2 border-transparent">email@meeplecave.com</span>
+              <a
+                href="mailto:info@meeplecave.com"
+                className="text-white inline-block"
+              >
+                <span className="border-b-2 border-transparent">
+                  info@meeplecave.com
+                </span>
               </a>
             </div>
           </div>

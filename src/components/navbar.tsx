@@ -151,10 +151,10 @@ export default function Navbar() {
                   {t("navbar.about")}
                 </Link>
                 <Link
-                  href="#services"
+                  href="/catalogs"
                   className="block text-white hover:text-[#394DFF] text-xl font-mono"
                 >
-                  {t("navbar.services")}
+                  {t("navbar.catalogs")}
                 </Link>
                 <Link
                   href="#contacts"
@@ -169,10 +169,10 @@ export default function Navbar() {
                   {t("navbar.contact")}
                 </div>
                 <div className="space-y-2 text-gray-400 text-sm font-mono">
-                  <p>IK: Deniss Kargins</p>
-                  <p>+37129992017</p>
-                  <p>lumtach@gmail.com</p>
-                  <p>Riga, Latvia</p>
+                  <p>Galda spēļu klubs "Meeple Cave"</p>
+                  <p>+37128954796</p>
+                  <p>info@meeplecave.com</p>
+                  <p>Liepaja, Latvia</p>
                 </div>
                 <div className="flex space-x-4 mt-6">
                   <Link

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { createClient } from "@/lib/supabase";
+import { useMemo, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
+import { createClientBrowser } from "../../lib/supabase/client";
 
 export const dynamic = "force-dynamic"; // не пререндерить
 // export const revalidate = 0;             // (опц.) выключить кэш ssg
@@ -14,8 +14,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const supabase = createClient();
+  const supabase = useMemo(() => createClientBrowser(), []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

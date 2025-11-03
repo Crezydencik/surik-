@@ -2,7 +2,7 @@
   "navbar": {
     "home": "Home",
     "about": "About Us",
-    "services": "Services",
+    "catalogs": "Game catalogs",
     "project": "Project",
     "advantages": "Advantages",
     "contact": "Contact Us"
@@ -49,5 +49,34 @@
     "clear": "Clear",
     "notitle": "No title",
     "playersCount": "{{count}} players"
+  },
+  "news": {
+    "title": "Our News",
+    "share": "Share",
+    "open": "Open",
+    "tags": {
+      "boardgames": "boardgames",
+      "events": "events"
+    },
+    "posts": [
+      {
+        "id": "1",
+        "date": "25 Oct 2025",
+        "text": "🎲 We had a fantastic board game night! Thanks to everyone who joined 💙 #boardgames #liepaja",
+        "image": "/img/news1.jpg"
+      },
+      {
+        "id": "2",
+        "date": "20 Oct 2025",
+        "text": "🧩 New arrivals! Try 'Catan' and 'Azul' this weekend.",
+        "image": "/img/news2.jpg"
+      },
+      {
+        "id": "3",
+        "date": "10 Oct 2025",
+        "text": "💬 Share your favorite board games in the comments!",
+        "image": "/img/news3.jpg"
+      }
+    ]
   }
 }

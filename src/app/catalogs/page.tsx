@@ -11,6 +11,7 @@ import type {
   GameWithCategory,
   Lang,
 } from "../../lib/interfase";
+import CatalogBanner from "@/components/catalogs/CatalogBanner";
 
 /* ===================== Типы (вариант A) ===================== */
 
@@ -151,52 +152,72 @@ export default function CatalogPage() {
     });
     return map;
   }, [categories, lang]);
+  const activeFiltersCount =
+    (search.trim() ? 1 : 0) +
+    selectedCategories.length +
+    selectedPlayers.length;
+
+  const onResetAll = () => {
+    setSearch("");
+    setSelectedCategories([]);
+    setSelectedPlayers([]);
+  };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-4 md:p-8">
-      <FilterSidebar
-        search={search}
-        setSearch={setSearch}
-        categories={categories}
-        counts={counts}
-        selectedCategories={selectedCategories}
-        toggleCategory={toggleCategory}
-        playerOptions={playerOptions}
-        selectedPlayers={selectedPlayers}
-        togglePlayer={togglePlayer}
-        lang={lang}
+    <div className="flex flex-col gap-6 p-4 md:p-8">
+      <CatalogBanner
+        total={games.length}
+        activeFilters={activeFiltersCount}
+        onReset={onResetAll}
+        scrollToFiltersId="filters"
+        // bg="/img/hero-boardgames.jpg" // можешь заменить фон
       />
 
-      <main className="flex-1">
-        {loading ? (
-          <p className="text-gray-500">Loading...</p>
-        ) : games.length === 0 ? (
-          <p className="text-gray-500">No games found</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {games.map((g) => (
-              <GameItem
-                key={g.id}
-                title={g.title_key[lang] || g.title_key.en}
-                description={g.description_key[lang] || g.description_key.en}
-                img={g.image_url}
-                players={`${g.min_players}-${g.max_players}`}
-                time={g.duration_minutes ? `${g.duration_minutes} мин` : ""}
-                rating={g.rating ?? undefined} // сделай проп optional в GameItem
-                difficulty={g.difficulty ?? undefined} // и этот тоже
-                available={g.is_available}
-                category={
-                  g.category?.name?.[lang] ||
-                  g.category?.name?.en ||
-                  (g.category_id
-                    ? categoryTitleById.get(g.category_id) || ""
-                    : "")
-                }
-              />
-            ))}
-          </div>
-        )}
-      </main>
+      <div className="flex flex-col md:flex-row gap-6 p-4 md:p-8">
+        <FilterSidebar
+          search={search}
+          setSearch={setSearch}
+          categories={categories}
+          counts={counts}
+          selectedCategories={selectedCategories}
+          toggleCategory={toggleCategory}
+          playerOptions={playerOptions}
+          selectedPlayers={selectedPlayers}
+          togglePlayer={togglePlayer}
+          lang={lang}
+        />
+
+        <main className="flex-1">
+          {loading ? (
+            <p className="text-gray-500">Loading...</p>
+          ) : games.length === 0 ? (
+            <p className="text-gray-500">No games found</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {games.map((g) => (
+                <GameItem
+                  key={g.id}
+                  title={g.title_key[lang] || g.title_key.en}
+                  description={g.description_key[lang] || g.description_key.en}
+                  img={g.image_url}
+                  players={`${g.min_players}-${g.max_players}`}
+                  time={g.duration_minutes ? `${g.duration_minutes} мин` : ""}
+                  rating={g.rating ?? undefined} // сделай проп optional в GameItem
+                  difficulty={g.difficulty ?? undefined} // и этот тоже
+                  available={g.is_available}
+                  category={
+                    g.category?.name?.[lang] ||
+                    g.category?.name?.en ||
+                    (g.category_id
+                      ? categoryTitleById.get(g.category_id) || ""
+                      : "")
+                  }
+                />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
